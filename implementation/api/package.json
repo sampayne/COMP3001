@@ -1,0 +1,11 @@
+{
+  "name": "airmazingapi",
+  "version": "1.0.0",
+  "description": "API for Airmazing App (COMP3001)",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "vino mano",
+  "license": "ISC"
+}
