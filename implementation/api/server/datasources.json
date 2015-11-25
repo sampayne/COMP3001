@@ -1,0 +1,15 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "airmazingdb": {
+    "host": "37.59.121.18",
+    "port": 5432,
+    "database": "londonair1",
+    "username": "power_user",
+    "password": "Ucl2015-pu&",
+    "name": "airmazingdb",
+    "connector": "postgresql"
+  }
+}

@@ -1,11 +1,32 @@
 {
-  "name": "airmazingapi",
+  "name": "Airmazing API",
   "version": "1.0.0",
-  "description": "API for Airmazing App (COMP3001)",
-  "main": "index.js",
+  "main": "server/server.js",
   "scripts": {
-    "test": "test"
+    "pretest": "jshint ."
   },
-  "author": "vino mano",
-  "license": "ISC"
+  "dependencies": {
+    "bcryptjs": "^2.3.0",
+    "compression": "^1.0.3",
+    "cors": "^2.5.2",
+    "crypto": "0.0.3",
+    "debug": "^2.2.0",
+    "loopback": "^2.22.0",
+    "loopback-boot": "^2.6.5",
+    "loopback-component-explorer": "^2.1.0",
+    "loopback-connector-postgresql": "^2.4.0",
+    "loopback-datasource-juggler": "^2.39.0",
+    "path": "^0.12.7",
+    "serve-favicon": "^2.0.1",
+    "utils": "^0.3.1"
+  },
+  "devDependencies": {
+    "grunt-loopback-auto": "0.0.5",
+    "jshint": "^2.5.6"
+  },
+  "repository": {
+    "type": "",
+    "url": ""
+  },
+  "description": "Airmazing API"
 }
