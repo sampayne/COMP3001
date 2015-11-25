@@ -29,8 +29,8 @@ queryPollutionAndWeather <- function(site_id, species_id, startH, endH) {
   }
   else {
     
-    daysSelectionQuery <- " and extract(dow from pol.date) = 0
-    and extract(dow from pol.date) =6"
+    daysSelectionQuery <- " and (extract(dow from pol.date) = 0
+    or extract(dow from pol.date) =6)"
     
   }
   
@@ -150,7 +150,7 @@ rm(pw)
 
 #select only sites that have data available
 sitesArray <- dbGetQuery(con, "select distinct site_id from pollution
-                         where species_id = 'PM25'
+                         where species_id = 'NO2'
                          order by site_id")
 
 # close the connection
@@ -161,7 +161,7 @@ dbDisconnect(con)
 #getting data with sql
 
 site_id <- "BL0"
-species_id <- "PM25"
+species_id <- "NO2"
 
 
 #setupModelforSiteAndSpecies(site_id,species_id)
