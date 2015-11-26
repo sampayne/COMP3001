@@ -56,5 +56,9 @@
   "Prediction": {
     "dataSource": "airmazingdb",
     "public": true
+  },
+  "Feedback": {
+    "dataSource": "airmazingdb",
+    "public": true
   }
 }
