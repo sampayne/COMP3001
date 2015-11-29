@@ -1,4 +1,7 @@
-getWeatherData <- function(lat,lng) {
+###general functions###
+
+
+getWeatherData <- function(lat, lng) {
   
   require(jsonlite)
   baseURL <- "http://api.worldweatheronline.com/premium/v1/weather.ashx?"
@@ -17,9 +20,32 @@ getSiteCoordinates <- function(site_id) {
   
 }  
 
-queryPollutionAndWeather <- function(site_id, species_id, startH, endH) {
+getSitesWithData <- function(species_id) {
+  pw <- {
+    "Ucl2015-pu&"
+  }
+  con <- dbConnect(drv, dbname = "londonair1",
+                   host = "localhost", port = 5432,
+                   user = "power_user", password = pw)
+  rm(pw)
   
-  print(site_id)
+  #select only sites that have data available
+  sitesArray <- dbGetQuery(con, paste("select distinct site_id from pollution
+                                      where species_id = '", species_id,"' 
+                                      order by site_id", sep=""))
+  
+  on.exit(dbDisconnect(con))
+  
+  return (sitesArray)
+  
+  
+}
+
+
+#### functions for NO2 ####
+queryPollutionAndWeatherNO2 <- function(site_id, species_id, startH, endH, date) {
+  
+  #print(site_id)
   
   if(format(as.Date(date),"%w") != 0 && format(as.Date(date),"%w") != 6) {
     
@@ -43,35 +69,51 @@ queryPollutionAndWeather <- function(site_id, species_id, startH, endH) {
                  site_id,
                  "' and pol.species_id = '",
                  species_id,
-                 "'",daysSelectionQuery,
-                 " and date_part('hour', pol.date) >=",startH," and date_part('hour', pol.date) <=", endH,
+                 "'",
+#                  daysSelectionQuery,
+#                  " and date_part('hour', pol.date) >=",startH," and date_part('hour', pol.date) <=", endH,
                  sep = "")
   #print(query)
   return (query)
 }
 
 
-linearRegressionModelSetup <- function(trainset, testset) {
+linearRegressionModelSetupNO2 <- function(trainset, testset) {
   
   #model
   model = lm(value ~ temperature_c+precip_mm+cloud_cover+pressure+wind_direction_degree+wind_speed_kmph+humidity+wind_gust_kmph+feels_like_c+heat_index_c+visibility+wind_chill_c,data=trainset)
-  print(summary(model))
+  #print(summary(model))
   
   #predict
   predicted <- predict(model, newdata = testset)
-  #print(cbind(testset, predicted))
-  #print(predicted)
-  #plot true vs. prediction
-  #plot(testset, predicted)
   return (predicted)
   
 }
 
 
+getTestsetForDateNO2 <- function(day = 1, df_weatherData) {
+  
+  queryTestset_df <- data.frame(temperature_c = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["tempC"]])),
+                                precip_mm = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["precipMM"]])), 
+                                cloud_cover = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["cloudcover"]])),
+                                pressure = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["pressure"]])),
+                                wind_direction_degree = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["winddirDegree"]])),
+                                wind_speed_kmph = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["windspeedKmph"]])),
+                                humidity = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["humidity"]])),
+                                wind_gust_kmph = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["WindGustKmph"]])),
+                                feels_like_c = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["FeelsLikeC"]])),
+                                heat_index_c = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["HeatIndexC"]])),
+                                visibility = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["visibility"]])),
+                                wind_chill_c = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[day]][["WindChillC"]])))
+  
+  return (queryTestset_df)
+  
+}
+
 firstApplyofModel <- TRUE
-dbAppend <- TRUE
-dbOverwrite <- FALSE
-setupModelforSiteAndSpecies <- function(site_id, species_id, startH, endH) {
+dbAppend <- FALSE
+dbOverwrite <- TRUE
+setupModelforSiteAndSpeciesNO2 <- function(site_id, species_id,  startH = 0, endH = 24) {
   
   #connection
   pw <- {
@@ -82,51 +124,51 @@ setupModelforSiteAndSpecies <- function(site_id, species_id, startH, endH) {
                    user = "power_user", password = pw)
   rm(pw)
   
-  queryTrainset <- queryPollutionAndWeather(site_id, species_id, "'2014-04-01'",
-                                            "'2014-05-01'")
   
-  df_queryTrainset <- dbGetQuery(con, queryTrainset)
   
   #working with weather data
   df_coordinates <- dbGetQuery(con, getSiteCoordinates(site_id))
   df_weatherData <- getWeatherData(df_coordinates$lat, df_coordinates$lng)
+  days <- c(1, 2) #get all data for today and tomorrow
   
-  queryTestset_df <- data.frame(temperature_c = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["tempC"]])),
-                                precip_mm = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["precipMM"]])), 
-                                cloud_cover = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["cloudcover"]])),
-                                pressure = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["pressure"]])),
-                                wind_direction_degree = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["winddirDegree"]])),
-                                wind_speed_kmph = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["windspeedKmph"]])),
-                                humidity = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["humidity"]])),
-                                wind_gust_kmph = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["WindGustKmph"]])),
-                                feels_like_c = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["FeelsLikeC"]])),
-                                heat_index_c = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["HeatIndexC"]])),
-                                visibility = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["visibility"]])),
-                                wind_chill_c = c(as.numeric(df_weatherData[["data"]]$weather[["hourly"]][[1]][["WindChillC"]])))
+  df_queryTestset <- lapply(days, getTestsetForDateNO2, df_weatherData = df_weatherData)
+  #print(df_result[[2]])
   
-  date <- df_weatherData[["data"]]$weather[["date"]][[1]]
-  
-  
+  date_today <- df_weatherData[["data"]]$weather[["date"]][[1]]
+  date_tomorrow <- df_weatherData[["data"]]$weather[["date"]][[2]]
+  queryTrainset_today <- queryPollutionAndWeatherNO2(site_id, species_id, startH, endH, date_today)
+  queryTrainset_tomorrow <- queryPollutionAndWeatherNO2(site_id, species_id, startH, endH, date_tomorrow)
+  #print(queryTrainset_today)
+  df_queryTrainset_today <- dbGetQuery(con, queryTrainset_today)
+  df_queryTrainset_tomorrow <- dbGetQuery(con, queryTrainset_tomorrow)
   
   #call function
-  predicted <- linearRegressionModelSetup(df_queryTrainset,queryTestset_df)
+  predicted_today <- linearRegressionModelSetupNO2(df_queryTrainset_today, df_queryTestset[[1]])
+  predicted_tomorrow <- linearRegressionModelSetupNO2(df_queryTrainset_tomorrow, df_queryTestset[[2]])
   
-  db_Update <- data.frame(site_id = c(site_id),
+  db_Update_today <- data.frame(site_id = c(site_id),
                           species_id = c(species_id),
-                          date = c(paste(date, paste(seq(from=0, to=23), ":00:00", sep = ""))), ## generating the hours of the day
-                          value = c(predicted))
-  print(date)
-  print(queryTestset_df)
-  print(db_Update)
+                          date = c( paste(date_today, paste(seq(from=0, to=23), ":00:00", sep = ""))), ## generating the hours of the day
+                          value = c(predicted_today))
+  db_Update_tomorow <- data.frame(site_id = c(site_id),
+                                species_id = c(species_id),
+                                date = c( paste(date_tomorrow, paste(seq(from=0, to=23), ":00:00", sep = ""))), ## generating the hours of the day
+                                value = c(predicted_tomorrow))
+  
+  db_Update <- rbind(db_Update_today, db_Update_tomorow)
+  #print(date)
+  #print(queryTestset_df)
+  #print(db_Update)
   
   
   print(dbWriteTable(con, "prediction", value = db_Update, append = dbAppend, overwrite = dbOverwrite, row.names = FALSE))
   
   if(firstApplyofModel == TRUE) {
     
-    dbAppend <- TRUE
-    dbOverwrite <- FALSE
-    firstApplyofModel <- FALSE
+    assign("dbAppend", TRUE, envir = .GlobalEnv)
+    assign("dbOverwrite", FALSE, envir = .GlobalEnv)
+    assign("firstApplyofModel", FALSE, envir = .GlobalEnv)
+
   }
   
   
@@ -135,42 +177,29 @@ setupModelforSiteAndSpecies <- function(site_id, species_id, startH, endH) {
   
 }
 
+
+setupAllModels <- function() {
+  
+  #NO2
+  sitesArray <- getSitesWithData("NO2")
+  #print(sitesArray[, 1])
+  mapply(setupModelforSiteAndSpeciesNO2, sitesArray[, 1], MoreArgs = list(species_id = "NO2"))
+  
+  #PM10
+  
+  
+  #PM2.5
+  
+  
+}
+
 ####START-OF-SCRIPT####
 
 #connection
 require("RPostgreSQL")
-pw <- {
-  "Ucl2015-pu&"
-}
 drv <- dbDriver("PostgreSQL")
-con <- dbConnect(drv, dbname = "londonair1",
-                 host = "localhost", port = 5432,
-                 user = "power_user", password = pw)
-rm(pw)
-
-#select only sites that have data available
-sitesArray <- dbGetQuery(con, "select distinct site_id from pollution
-                         where species_id = 'NO2'
-                         order by site_id")
-
-# close the connection
-dbDisconnect(con)
-
-
-
-#getting data with sql
-
-site_id <- "BL0"
-species_id <- "NO2"
-
-
-#setupModelforSiteAndSpecies(site_id,species_id)
-#weatherData <- getWeatherData()
-
-mapply(setupModelforSiteAndSpecies, sitesArray[3:5, ], MoreArgs = list(species_id = species_id))
-
-
+setupAllModels()
 
 #to close all connections
-mapply(dbDisconnect, dbListConnections(dbDriver("PostgreSQL")))
+#mapply(dbDisconnect, dbListConnections(dbDriver("PostgreSQL")))
 dbUnloadDriver(drv)
