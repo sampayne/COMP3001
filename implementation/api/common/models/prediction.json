@@ -10,22 +10,6 @@
     "table": "prediction"
   },
   "properties": {
-    "siteId": {
-      "type": "String",
-      "required": false,
-      "length": null,
-      "precision": null,
-      "scale": null,
-      "postgresql": {
-        "columnName": "site_id",
-        "dataType": "text",
-        "dataLength": null,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "YES"
-      },
-      "_selectable": true
-    },
     "speciesId": {
       "type": "String",
       "required": false,
@@ -34,22 +18,6 @@
       "scale": null,
       "postgresql": {
         "columnName": "species_id",
-        "dataType": "text",
-        "dataLength": null,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "YES"
-      },
-      "_selectable": true
-    },
-    "date": {
-      "type": "String",
-      "required": false,
-      "length": null,
-      "precision": null,
-      "scale": null,
-      "postgresql": {
-        "columnName": "date",
         "dataType": "text",
         "dataLength": null,
         "dataPrecision": null,
@@ -69,6 +37,40 @@
         "dataType": "double precision",
         "dataLength": null,
         "dataPrecision": 53,
+        "dataScale": null,
+        "nullable": "YES"
+      },
+      "_selectable": true
+    },
+    "date": {
+      "type": "String",
+      "id": true,
+      "required": false,
+      "length": null,
+      "precision": null,
+      "scale": null,
+      "postgresql": {
+        "columnName": "date",
+        "dataType": "text",
+        "dataLength": null,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "YES"
+      },
+      "_selectable": true
+    },
+    "siteId": {
+      "type": "String",
+      "id": true,
+      "required": false,
+      "length": null,
+      "precision": null,
+      "scale": null,
+      "postgresql": {
+        "columnName": "site_id",
+        "dataType": "text",
+        "dataLength": null,
+        "dataPrecision": null,
         "dataScale": null,
         "nullable": "YES"
       },

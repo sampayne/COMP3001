@@ -31,7 +31,9 @@
   },
   "Pollution": {
     "dataSource": "airmazingdb",
-    "public": true
+    "public": true,
+    "$promise": {},
+    "$resolved": true
   },
   "Site": {
     "dataSource": "airmazingdb",
@@ -55,7 +57,9 @@
   },
   "Prediction": {
     "dataSource": "airmazingdb",
-    "public": true
+    "public": true,
+    "$promise": {},
+    "$resolved": true
   },
   "Feedback": {
     "dataSource": "airmazingdb",
