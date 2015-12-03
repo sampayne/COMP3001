@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<airmazing.airmazing.views.FeedbackInputView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="#aaaaaa"
+    android:padding="20sp"
+    android:layout_margin="10sp"
+    android:gravity="center"
+
+    >
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="How was your day today?"
+        android:id="@+id/howWasYourJourneyLabel"
+        android:layout_gravity="center"
+        android:paddingBottom="20sp"
+
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        >
+
+        <ImageButton
+            android:background="#aaaaaa"
+            android:src="@drawable/smile_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button1"
+            android:layout_gravity="center" />
+
+        <ImageButton
+            android:background="#aaaaaa"
+            android:src="@drawable/smile_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button2"
+            android:layout_gravity="center" />
+
+        <ImageButton
+            android:background="#aaaaaa"
+            android:src="@drawable/smile_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button3"
+            android:layout_gravity="center" />
+
+        <ImageButton
+            android:background="#aaaaaa"
+            android:src="@drawable/smile_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button4"
+            android:layout_gravity="center" />
+
+        <ImageButton
+            android:background="#aaaaaa"
+            android:src="@drawable/smile_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button5"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+
+</airmazing.airmazing.views.FeedbackInputView>

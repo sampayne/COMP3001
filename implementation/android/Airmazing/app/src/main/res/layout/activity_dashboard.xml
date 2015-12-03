@@ -1,0 +1,29 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="airmazing.airmazing.ui.DashboardActivity">
+<LinearLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Record Route"
+        android:id="@+id/record_route_button"
+        android:layout_gravity="center_horizontal" />
+
+    <include layout="@layout/dashboard_feedback_input" android:id="@+id/feedbackInput" />
+
+    <include layout="@layout/dashboard_today" android:id="@+id/todayView" />
+
+    <include layout="@layout/dashboard_today" android:id="@+id/tomorrowView" />
+
+    <include layout="@layout/dashboard_feedback_avg" android:id="@+id/feedbackAvg" />
+
+</LinearLayout>
+
+</ScrollView>
