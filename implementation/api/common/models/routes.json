@@ -10,23 +10,6 @@
     "table": "routes"
   },
   "properties": {
-    "id": {
-      "type": "Number",
-      "id": true,
-      "required": true,
-      "length": null,
-      "precision": 32,
-      "scale": 0,
-      "postgresql": {
-        "columnName": "id",
-        "dataType": "integer",
-        "dataLength": null,
-        "dataPrecision": 32,
-        "dataScale": 0,
-        "nullable": "NO"
-      },
-      "_selectable": false
-    },
     "userid": {
       "type": "Number",
       "required": true,
@@ -55,6 +38,23 @@
         "dataLength": null,
         "dataPrecision": null,
         "dataScale": null,
+        "nullable": "NO"
+      },
+      "_selectable": false
+    },
+    "id": {
+      "type": "Number",
+      "id": true,
+      "required": false,
+      "length": null,
+      "precision": 32,
+      "scale": 0,
+      "postgresql": {
+        "columnName": "id",
+        "dataType": "integer",
+        "dataLength": null,
+        "dataPrecision": 32,
+        "dataScale": 0,
         "nullable": "NO"
       },
       "_selectable": false

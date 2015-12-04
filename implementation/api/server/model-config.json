@@ -51,10 +51,6 @@
     "dataSource": "airmazingdb",
     "public": true
   },
-  "Routes": {
-    "dataSource": "airmazingdb",
-    "public": true
-  },
   "Prediction": {
     "dataSource": "airmazingdb",
     "public": true,
@@ -62,6 +58,16 @@
     "$resolved": true
   },
   "Feedback": {
+    "dataSource": "airmazingdb",
+    "public": true
+  },
+  "Predictionall": {
+    "dataSource": "airmazingdb",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "Routes": {
     "dataSource": "airmazingdb",
     "public": true
   }

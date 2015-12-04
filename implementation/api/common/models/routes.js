@@ -3,6 +3,90 @@ var request = require('request');
 var async = require('async');
 module.exports = function(Routes) {
 
+	Routes.calcindexgivenstaytime = function(routeObj, numOfMins, cb){
+			var index = 0;
+
+			//outwards trip
+			Routes.calcindex(routeObj, function(err, indexResult){
+				console.log("indexresult: "+indexResult)
+				index += indexResult * 2;
+
+				//{"lat":51.5228749,"lng":-0.1315501,"time":"2015-12-3 10:29:00"}..
+			
+				//stay at work calc
+				var destinationObject = routeObj[routeObj.length-1];
+				var destLat = destinationObject.lat;
+				var destLng = destinationObject.lng;
+				var absoluteTimeAtDest = new Date(destinationObject.time);
+				
+				var absoluteTimeAtDestMomentObj = moment(absoluteTimeAtDest);
+
+				var a = 0;
+				var stayRoute = [{}];
+				stayRoute[0].lat = destLat;
+				stayRoute[0].lng = destLng;
+
+
+
+				async.whilst(
+				    function () { return numOfMins > 0; },
+				    function (callback) {
+
+				        absoluteTimeAtDestMomentObj.add(1, 'minutes');
+
+						var absoluteTimeAtDestString = absoluteTimeAtDestMomentObj.format("YYYY-MM-DD HH:mm:ss");
+
+						
+						stayRoute[0].time = absoluteTimeAtDestString;
+						
+						console.log(stayRoute);
+
+
+						Routes.calcindex(stayRoute, function(err, indexResult){
+							console.log("indexresult: "+indexResult)
+							index += indexResult;
+
+							numOfMins--;
+							callback(null,numOfMins);
+						});
+
+				    },
+				    function (err) {
+				    	if(err){
+				    		console.log("err: "+err);
+				    		cb(err,-1);
+				    	}else{
+				    		console.log(index);
+
+
+				    		//calc inwardstrip index! (at the moment just doubling outwards trip index)
+
+
+
+
+				    		cb(null,index);
+				    	}
+				        //callback(err,n);
+				    }
+				);
+
+
+			});
+
+
+
+					
+	}
+
+	Routes.calcindexgivenid = function(id, cb){
+
+		Routes.findOne({where: {id: id}}, function(err, routeObj) { 
+			Routes.calcindex(routeObj.route, function(err, indexResult){
+				cb(null,indexResult);
+			});
+		});
+	}
+
 	Routes.calcindex = function(routeobject, cb){
 
 
@@ -117,6 +201,9 @@ module.exports = function(Routes) {
 				//if we have 10000 coords for 10 mins we need coords for every minute so take every 10000/100 cords
 
 				var x = 0;
+				if(initroute.length == 1){
+					route.push(initroute[0]);
+				}
 				while(x<initroute.length-1){
 					route.push(initroute[x]);
 					if(numOfCoords/diffMins < 1){
@@ -541,11 +628,24 @@ module.exports = function(Routes) {
 		 });*/
 	}
 	Routes.remoteMethod (
+		'calcindexgivenstaytime',
+		{
+			accepts: [{arg: 'routeobject', type:'object'},{arg: 'staytimeinminutes', type:'number'}],
+			returns: {arg: 'pollutionExposureIndex', type:'number'}
+		}
+	);
+	Routes.remoteMethod (
 		'calcindex',
 		{
 			accepts: {arg: 'routeobject', type:'object'},
 			returns: {arg: 'pollutionExposureIndex', type:'number'}
 		}
 	);
-
+	Routes.remoteMethod (
+		'calcindexgivenid',
+		{
+			accepts: {arg: 'routeid', type:'number'},
+			returns: {arg: 'pollutionExposureIndex', type:'number'}
+		}
+	);
 };
