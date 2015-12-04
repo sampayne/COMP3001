@@ -9,4 +9,15 @@
     <string name="title_activity_historical_chart">HistoricalChart</string>
     <string name="title_activity_route_record">RouteRecord</string>
     <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="latitude_label">Latitude</string>
+    <string name="longitude_label">Longitude</string>
+    <string name="last_update_time_label">Last location update time</string>
+
+    <string name="location_updated_message">Location updated</string>
+    <string name="start_updates">Start updates</string>
+    <string name="stop_updates">Stop updates</string>
+
+    <string name="google_maps_key">AIzaSyClBKq4rcP6PwP2phi5OupLwbRigQQDHLU</string>
+
 </resources>

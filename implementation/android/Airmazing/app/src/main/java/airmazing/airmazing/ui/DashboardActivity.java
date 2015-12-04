@@ -58,7 +58,7 @@ public class DashboardActivity extends AppCompatActivity implements OnClickListe
 
     public void recordRouteButtonClick(){
 
-        this.startActivity(new Intent(this, RouteRecordActivity.class));
+        startActivity(new Intent(this, RouteRecordActivity.class));
 
     }
 

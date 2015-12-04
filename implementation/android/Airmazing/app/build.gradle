@@ -2,9 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "19.1.0"
+    buildToolsVersion "21.0.0"
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "airmazing.airmazing"
         minSdkVersion 22
         targetSdkVersion 22
@@ -26,4 +27,5 @@ dependencies {
     compile 'com.android.support:design:22.2.1'
     compile 'com.strongloop:loopback-sdk-android:1.5.+'
     compile 'joda-time:joda-time:2.3'
+    compile 'com.google.android.gms:play-services:8.1.0'
 }
