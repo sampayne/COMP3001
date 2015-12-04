@@ -380,7 +380,7 @@ module.exports = function(Routes) {
 							    							}
 						    							}else{
 						    								//estimated average pollution standard...?
-						    								//route[key].pollutionVal = 0;
+						    								route[key].pollutionVal = 0;
 						    								numberOfMissingPollutions++;
 						    							}
 						    							callback(null,0);
@@ -416,8 +416,8 @@ module.exports = function(Routes) {
 					for(step in route){
 						pollutionIndex += route[step].pollutionVal;
 					}
-
-					pollutionIndex += (pollutionIndex/route.length) * numberOfMissingPollutions; //to account for missing pollutions
+					console.log(pollutionIndex);
+					pollutionIndex += (pollutionIndex/(route.length-numberOfMissingPollutions)) * numberOfMissingPollutions; //to account for missing pollutions
 					cb(null,pollutionIndex);
 				}
 			});
