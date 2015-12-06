@@ -26,29 +26,55 @@ module.exports = function(Routes) {
 				stayRoute[0].lat = destLat;
 				stayRoute[0].lng = destLng;
 
+			
 
 
 				async.whilst(
 				    function () { return numOfMins > 0; },
 				    function (callback) {
 
-				        absoluteTimeAtDestMomentObj.add(1, 'minutes');
-
-						var absoluteTimeAtDestString = absoluteTimeAtDestMomentObj.format("YYYY-MM-DD HH:mm:ss");
-
-						
-						stayRoute[0].time = absoluteTimeAtDestString;
-						
-						console.log(stayRoute);
+				    	if(absoluteTimeAtDestMomentObj.get('minute') == 30 && numOfMins>=60){ //optimisation
 
 
-						Routes.calcindex(stayRoute, function(err, indexResult){
-							console.log("indexresult: "+indexResult)
-							index += indexResult;
+				    		absoluteTimeAtDestMomentObj.add(59, 'minutes');
 
-							numOfMins--;
-							callback(null,numOfMins);
-						});
+							var absoluteTimeAtDestString = absoluteTimeAtDestMomentObj.format("YYYY-MM-DD HH:mm:ss");
+
+							
+							stayRoute[0].time = absoluteTimeAtDestString;
+							
+							console.log("minute 0: "+absoluteTimeAtDestString);
+
+
+							Routes.calcindex(stayRoute, function(err, indexResult){
+								//console.log("indexresult: "+indexResult)
+								index += indexResult*59;
+
+								numOfMins -= 59;
+								callback(null,numOfMins);
+							});
+
+				    	}else{ //normal calc for individual minutes
+
+
+					        absoluteTimeAtDestMomentObj.add(1, 'minutes');
+
+							var absoluteTimeAtDestString = absoluteTimeAtDestMomentObj.format("YYYY-MM-DD HH:mm:ss");
+
+							
+							stayRoute[0].time = absoluteTimeAtDestString;
+							
+							console.log(stayRoute);
+
+
+							Routes.calcindex(stayRoute, function(err, indexResult){
+								console.log("indexresult: "+indexResult)
+								index += indexResult;
+
+								numOfMins--;
+								callback(null,numOfMins);
+							});
+						}
 
 				    },
 				    function (err) {
@@ -60,6 +86,7 @@ module.exports = function(Routes) {
 
 
 				    		//calc inwardstrip index! (at the moment just doubling outwards trip index)
+
 
 
 
