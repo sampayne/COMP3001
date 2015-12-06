@@ -264,7 +264,7 @@ module.exports = function(Routes) {
 
 				var diffMs = finalTime - initialTime;
 				var diffMins = Math.round(diffMs  / 60000); // minutes
-				console.log(diffMins);
+				console.log("diffmins: "+diffMins);
 
 				//if we have 10000 coords for 10 mins we need coords for every minute so take every 10000/100 cords
 
@@ -272,12 +272,12 @@ module.exports = function(Routes) {
 				if(initroute.length == 1){
 					route.push(initroute[0]);
 				}
-				while(x<initroute.length-1){
+				while(x<initroute.length){
 					route.push(initroute[x]);
 					if(numOfCoords/diffMins < 1){
 						x+= 1;
 					}else{
-						x += numOfCoords/diffMins;
+						x += parseInt(numOfCoords/diffMins);
 					}
 				}
 
