@@ -323,6 +323,7 @@ module.exports = function(Routes) {
 						var dateTimeOfStep = new Date(route[step].time);
 						dateTimeOfStep.setHours(dateTimeOfStep.getHours() + Math.round(dateTimeOfStep.getMinutes()/60));
 	    				dateTimeOfStep.setMinutes(0);
+	    				dateTimeOfStep.setSeconds(0);
 	    				var dateTimeOfStepString = moment(dateTimeOfStep).format("YYYY-MM-DD HH:mm:ss");
 	    				//console.log(dateTimeOfStepString);
 	    				route[step].closestSiteId = mindistSite;
