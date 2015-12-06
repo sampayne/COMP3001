@@ -5,11 +5,13 @@ module.exports = function(Routes) {
 
 	Routes.calcindexgivenstaytime = function(routeObj, numOfMins, cb){
 			var index = 0;
+			var numOfMinsCopy = numOfMins;
+			var routeObjCopy = JSON.parse(JSON.stringify(routeObj));
 
 			//outwards trip
 			Routes.calcindex(routeObj, function(err, indexResult){
 				console.log("indexresult: "+indexResult)
-				index += indexResult * 2;
+				index += indexResult;
 
 				//{"lat":51.5228749,"lng":-0.1315501,"time":"2015-12-3 10:29:00"}..
 			
@@ -85,7 +87,46 @@ module.exports = function(Routes) {
 				    		console.log(index);
 
 
-				    		//calc inwardstrip index! (at the moment just doubling outwards trip index)
+				    		//calc inbound trip index!
+
+				    		var numOfCoords = routeObjCopy.length;
+							var initialTime = new Date(routeObjCopy[0].time);
+							var finalTime = new Date (routeObjCopy[numOfCoords-1].time);
+
+							var diffMs = finalTime - initialTime;
+							var diffMins = Math.round(diffMs  / 60000); // minutes
+
+							
+
+
+							
+
+							var routeObjReversed = JSON.parse(JSON.stringify(routeObjCopy));
+
+
+				    		routeObjReversed = routeObjReversed.reverse();
+
+				    		console.log(routeObjCopy);
+				    		console.log(routeObjReversed);
+
+
+							for(coord in routeObjCopy){
+							   routeObjCopy[coord].lng = routeObjReversed[coord].lng;
+							   routeObjCopy[coord].lat = routeObjReversed[coord].lat;
+							   routeObjCopy[coord].time = (moment(new Date(routeObjCopy[coord].time)).add(diffMins+numOfMinsCopy, 'minutes')).format("YYYY-MM-DD HH:mm:ss");
+							}
+							console.log("return route object PRINT:" +routeObjCopy);
+							console.log(routeObjCopy);
+														console.log("return route object PRINT:" +routeObjCopy);
+
+
+				    		Routes.calcindex(routeObjCopy, function(err, indexResult){
+								console.log("returnindexresult: "+indexResult)
+								index += indexResult;
+
+
+							});
+
 
 
 
