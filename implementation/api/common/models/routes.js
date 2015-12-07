@@ -3,6 +3,28 @@ var request = require('request');
 var async = require('async');
 module.exports = function(Routes) {
 
+	Routes.predictIndexGivenRouteIDStayTime = function(routeID, numOfMinsStayTime, startDateTimeForPrediction, cb){
+		Routes.findOne({where: {id: routeID}}, function(err, routeObj) { 
+			//change date times to start with prediction start time
+			var initialDateTime =  new Date(routeObj.route[0].time).getTime();
+			var startDateTimeForPredictionObj = new Date(startDateTimeForPrediction).getTime();
+			for(coord in routeObj.route){
+				var currentDateTime = new Date(routeObj.route[coord].time).getTime();
+				console.log(currentDateTime);
+				console.log(initialDateTime);
+				console.log(startDateTimeForPredictionObj);
+				var diff = new Date((currentDateTime - initialDateTime) + startDateTimeForPredictionObj);
+				console.log(diff);
+				routeObj.route[coord].time = moment(diff).format("YYYY-MM-DD HH:mm:ss");
+			}
+			console.log(routeObj);
+
+			Routes.calcindexgivenstaytime(routeObj.route, numOfMinsStayTime, function(err, indexResult){
+				cb(null,indexResult);
+			})
+		});
+	}
+
 	Routes.calcindexgivenstaytime = function(routeObj, numOfMins, cb){
 			var index = 0;
 			var numOfMinsCopy = numOfMins;
@@ -501,17 +523,21 @@ module.exports = function(Routes) {
 						    						if(predictionItems.length > 0){
 						    							console.log("in here");
 						    							var predictionAvg = 0;
+						    							var numOfPredictionItems = 0;
 						    							for(predictionItem in predictionItems){
 						    								//predictionVals.push({'species_id':predictionVals[predictionItem].species_id,'value':predictionVals[predictionItem].value});
 						    								
-						    								console.log("predictionindunnormalised: "+predictionItems[predictionItem].speciesId + ", "+ predictionItems[predictionItem].value);
-
-						    								var normalisedIndex = normaliseIndex(predictionItems[predictionItem].speciesId,predictionItems[predictionItem].value);
-						    								predictionAvg += normalisedIndex;
-						    								console.log("predictionind: "+normalisedIndex);
+						    								if(predictionItems[predictionItem].value != -1){
+						    									console.log("predictionindunnormalised: "+predictionItems[predictionItem].speciesId + ", "+ predictionItems[predictionItem].value);
+						    									numOfPredictionItems++;
+							    								var normalisedIndex = normaliseIndex(predictionItems[predictionItem].speciesId,predictionItems[predictionItem].value);
+							    								predictionAvg += normalisedIndex;
+							    								console.log("predictionind: "+normalisedIndex);
+						    								}
+						    								
 
 						    							}
-						    							predictionAvg /= predictionItems.length;
+						    							predictionAvg /= numOfPredictionItems;
 
 						    							console.log("predictionAvg: "+predictionAvg);
 
@@ -696,6 +722,14 @@ module.exports = function(Routes) {
 			cb(null, output);
 		 });*/
 	}
+
+	Routes.remoteMethod (
+		'predictIndexGivenRouteIDStayTime',
+		{
+			accepts: [{arg: 'routeid',type:'number'},{arg: 'numofminsstaytime',type:'number'},{arg: 'startdatetimeforprediction',type:'string'}],
+			returns: {arg: 'pollutionExposureIndex', type:'number'}
+		}
+	);
 	Routes.remoteMethod (
 		'calcindexgivenstaytime',
 		{

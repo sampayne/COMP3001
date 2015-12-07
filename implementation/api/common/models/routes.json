@@ -27,7 +27,7 @@
       "_selectable": false
     },
     "route": {
-      "type": "String",
+      "type": "Object",
       "required": true,
       "length": null,
       "precision": null,
