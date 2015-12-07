@@ -1,4 +1,21 @@
 module.exports = function(Feedback) {
+	Feedback.generalavg = function(id, cb){
+		Feedback.find({where: { }}, function(err, feedbacks) { 
+			var avg = 0;
+			var length = 0;
+			for (feedback in feedbacks){
+				var dateUserIDArray = feedbacks[feedback].dateuserid.split(',');
+				var date = dateUserIDArray[0];
+				var userid = Number(dateUserIDArray[1]);
+				if(userid == id){
+					avg += feedbacks[feedback].rating;
+					length++;
+				}
+			}
+			avg /= length;
+			cb(null, avg);
+		 });
+	}
 	Feedback.thirtydayavg = function(id, cb) {
 		var ONE_MONTH = 30 * 24 * 60 * 60 * 1000;  // Month in milliseconds
 		var avg = 0;
@@ -50,6 +67,13 @@ module.exports = function(Feedback) {
 		 });
 	}
 
+	Feedback.remoteMethod (
+		'generalavg',
+		{
+			accepts: {arg: 'userid', type:'number'},
+			returns: {arg: 'avg'}
+		}
+	)
 	Feedback.remoteMethod (
 		'thirtydayavg',
 		{
