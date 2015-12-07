@@ -539,10 +539,29 @@ module.exports = function(Routes) {
 						    							}
 						    							predictionAvg /= numOfPredictionItems;
 
-						    							console.log("predictionAvg: "+predictionAvg);
+						    							if(pollutionAvg == 0){
+							    							if(key!=0){
+								    							if(route[key-1]){
+								    								if(route[key-1].pollutionVal > 0){
+								    									route[key].pollutionVal = pollutionVal;
+								    								}else{
+								    									route[key].pollutionVal = 0;
+								    								}
+								    							}else{
+								    								route[key].pollutionVal = 0;
+								    							}
+							    							}else{
+							    								//estimated average pollution standard...?
+							    								route[key].pollutionVal = 0;
+							    								numberOfMissingPollutions++;
+							    							}
+						    							}else{
 
-						    							//route[key].pollutionVal = predictionVals[0].value;
-						    							route[key].pollutionVal = predictionAvg;
+							    							console.log("predictionAvg: "+predictionAvg);
+
+							    							//route[key].pollutionVal = predictionVals[0].value;
+							    							route[key].pollutionVal = predictionAvg;
+						    							}
 						    							callback(null,0);
 
 						    						}else{
