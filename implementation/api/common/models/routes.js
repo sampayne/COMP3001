@@ -3,7 +3,7 @@ var request = require('request');
 var async = require('async');
 module.exports = function(Routes) {
 
-	Routes.predictIndexGivenRouteIDStayTime = function(routeID, numOfMinsStayTime, startDateTimeForPrediction, cb){
+	Routes.predictIndexGivenRouteIDStayingAtHome = function(routeID, numOfMinsStayTimeAtWork, startDateTimeForPrediction, cb){
 		Routes.findOne({where: {id: routeID}}, function(err, routeObj) { 
 			//change date times to start with prediction start time
 			var initialDateTime =  new Date(routeObj.route[0].time).getTime();
@@ -19,7 +19,28 @@ module.exports = function(Routes) {
 			}
 			console.log(routeObj);
 
-			Routes.calcindexgivenstaytime(routeObj.route, numOfMinsStayTime, function(err, indexResult){
+			Routes.calcindexforstayingathome(routeObj.route, numOfMinsStayTimeAtWork, function(err, indexResult){
+				cb(null,indexResult);
+			})
+		});
+	}
+	Routes.predictIndexGivenRouteID = function(routeID, numOfMinsStayTimeAtWork, startDateTimeForPrediction, cb){
+		Routes.findOne({where: {id: routeID}}, function(err, routeObj) { 
+			//change date times to start with prediction start time
+			var initialDateTime =  new Date(routeObj.route[0].time).getTime();
+			var startDateTimeForPredictionObj = new Date(startDateTimeForPrediction).getTime();
+			for(coord in routeObj.route){
+				var currentDateTime = new Date(routeObj.route[coord].time).getTime();
+				console.log(currentDateTime);
+				console.log(initialDateTime);
+				console.log(startDateTimeForPredictionObj);
+				var diff = new Date((currentDateTime - initialDateTime) + startDateTimeForPredictionObj);
+				console.log(diff);
+				routeObj.route[coord].time = moment(diff).format("YYYY-MM-DD HH:mm:ss");
+			}
+			console.log(routeObj);
+
+			Routes.calcindexgivenstaytimeatwork(routeObj.route, numOfMinsStayTimeAtWork, function(err, indexResult){
 				cb(null,indexResult);
 			})
 		});
@@ -36,7 +57,7 @@ module.exports = function(Routes) {
 		var timeOfJourney = Math.round((finalTime - initialTime)  / 60000); // minutes
 
 		var stayAtHomeTime = numOfMinsAtWork + (2 * timeOfJourney);
-		Routes.calcindexgivenstaytime(homeCoords, stayAtHomeTime, function(err, indexResult){
+		Routes.calcindexgivenstaytimeatwork(homeCoords, stayAtHomeTime, function(err, indexResult){
 			cb(null, indexResult);
 		})
 	}
@@ -775,11 +796,18 @@ module.exports = function(Routes) {
 			cb(null, output);
 		 });*/
 	}
-
+	
 	Routes.remoteMethod (
-		'predictIndexGivenRouteIDStayTime',
+		'predictIndexGivenRouteIDStayingAtHome',
 		{
-			accepts: [{arg: 'routeid',type:'number'},{arg: 'numofminsstaytime',type:'number'},{arg: 'startdatetimeforprediction',type:'string'}],
+			accepts: [{arg: 'routeid',type:'number'},{arg: 'numOfMinsStayTimeAtWork',type:'number'},{arg: 'startdatetimeforprediction',type:'string'}],
+			returns: {arg: 'pollutionExposureIndex', type:'object'}
+		}
+	);
+	Routes.remoteMethod (
+		'predictIndexGivenRouteID',
+		{
+			accepts: [{arg: 'routeid',type:'number'},{arg: 'numOfMinsStayTimeAtWork',type:'number'},{arg: 'startdatetimeforprediction',type:'string'}],
 			returns: {arg: 'pollutionExposureIndex', type:'object'}
 		}
 	);
