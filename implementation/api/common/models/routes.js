@@ -25,15 +25,35 @@ module.exports = function(Routes) {
 		});
 	}
 
-	Routes.calcindexgivenstaytime = function(routeObj, numOfMins, cb){
+	Routes.calcindexforstayingathome = function(routeObj,numOfMinsAtWork, cb){
+		var homeCoords = [];
+		homeCoords.push(routeObj[0]);
+
+		//calc time of journey
+		var finalTime = new Date(routeObj[routeObj.length - 1].time);
+		var initialTime = new Date(routeObj[0].time);
+
+		var timeOfJourney = Math.round((finalTime - initialTime)  / 60000); // minutes
+
+		var stayAtHomeTime = numOfMinsAtWork + (2 * timeOfJourney);
+		Routes.calcindexgivenstaytime(homeCoords, stayAtHomeTime, function(err, indexResult){
+			cb(null, indexResult);
+		})
+	}
+
+	Routes.calcindexgivenstaytimeatwork = function(routeObj, numOfMins, cb){
 			var index = 0;
+			var avgindex = 0;
+			var lengthForAvgIndex = 0;
 			var numOfMinsCopy = numOfMins;
 			var routeObjCopy = JSON.parse(JSON.stringify(routeObj));
 
 			//outwards trip
 			Routes.calcindex(routeObj, function(err, indexResult){
-				console.log("indexresult: "+indexResult)
-				index += indexResult;
+				console.log("indexresult: "+indexResult.pollutionIndex)
+				index += indexResult.pollutionIndex;
+
+				lengthForAvgIndex += indexResult.numOfLocations;
 
 				//{"lat":51.5228749,"lng":-0.1315501,"time":"2015-12-3 10:29:00"}..
 			
@@ -72,7 +92,8 @@ module.exports = function(Routes) {
 
 							Routes.calcindex(stayRoute, function(err, indexResult){
 								//console.log("indexresult: "+indexResult)
-								index += indexResult*59;
+								index += indexResult.pollutionIndex*59;
+								lengthForAvgIndex += 59;
 
 								numOfMins -= 59;
 								callback(null,numOfMins);
@@ -92,8 +113,9 @@ module.exports = function(Routes) {
 
 
 							Routes.calcindex(stayRoute, function(err, indexResult){
-								console.log("indexresult: "+indexResult)
-								index += indexResult;
+								console.log("indexresult: "+indexResult.pollutionIndex)
+								index += indexResult.pollutionIndex;
+								lengthForAvgIndex += indexResult.numOfLocations;
 
 								numOfMins--;
 								callback(null,numOfMins);
@@ -143,18 +165,24 @@ module.exports = function(Routes) {
 
 
 				    		Routes.calcindex(routeObjCopy, function(err, indexResult){
-								console.log("returnindexresult: "+indexResult)
-								index += indexResult;
+								console.log("returnindexresult: "+indexResult.pollutionIndex)
+								index += indexResult.pollutionIndex;
+								lengthForAvgIndex += indexResult.numOfLocations;
 
-
+								var returnPollutionIndex = {
+									"pollutionIndex" : index,
+									"averagePollutionIndex" : index/lengthForAvgIndex,
+									"numOfLocations" : lengthForAvgIndex
+								};
+								
+								cb(null, returnPollutionIndex);
 							});
 
 
 
 
 
-
-				    		cb(null,index);
+				    		
 				    	}
 				        //callback(err,n);
 				    }
@@ -619,7 +647,13 @@ module.exports = function(Routes) {
 					}
 					console.log(pollutionIndex);
 					pollutionIndex += (pollutionIndex/(route.length-numberOfMissingPollutions)) * numberOfMissingPollutions; //to account for missing pollutions
-					cb(null,pollutionIndex);
+					var avgPollutionIndex = pollutionIndex / route.length;
+					var returnPollutionIndex = {
+						"pollutionIndex" : pollutionIndex,
+						"averagePollutionIndex" : avgPollutionIndex,
+						"numOfLocations" : route.length
+					};
+					cb(null,returnPollutionIndex);
 				}
 			});
 
@@ -746,28 +780,35 @@ module.exports = function(Routes) {
 		'predictIndexGivenRouteIDStayTime',
 		{
 			accepts: [{arg: 'routeid',type:'number'},{arg: 'numofminsstaytime',type:'number'},{arg: 'startdatetimeforprediction',type:'string'}],
-			returns: {arg: 'pollutionExposureIndex', type:'number'}
+			returns: {arg: 'pollutionExposureIndex', type:'object'}
 		}
 	);
 	Routes.remoteMethod (
-		'calcindexgivenstaytime',
+		'calcindexforstayingathome',
+		{
+			accepts: [{arg: 'routeobject', type:'object'},{arg: 'staytimeathomeinminutes', type:'number'}],
+			returns: {arg: 'pollutionExposureIndex', type:'object'}
+		}
+	);
+	Routes.remoteMethod (
+		'calcindexgivenstaytimeatwork',
 		{
 			accepts: [{arg: 'routeobject', type:'object'},{arg: 'staytimeinminutes', type:'number'}],
-			returns: {arg: 'pollutionExposureIndex', type:'number'}
+			returns: {arg: 'pollutionExposureIndex', type:'object'}
 		}
 	);
 	Routes.remoteMethod (
 		'calcindex',
 		{
 			accepts: {arg: 'routeobject', type:'object'},
-			returns: {arg: 'pollutionExposureIndex', type:'number'}
+			returns: {arg: 'pollutionExposureIndex', type:'object'}
 		}
 	);
 	Routes.remoteMethod (
 		'calcindexgivenid',
 		{
 			accepts: {arg: 'routeid', type:'number'},
-			returns: {arg: 'pollutionExposureIndex', type:'number'}
+			returns: {arg: 'pollutionExposureIndex', type:'object'}
 		}
 	);
 };
