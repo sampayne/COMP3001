@@ -63,7 +63,14 @@ module.exports = function(Feedback) {
 					output.push(feedbacks[feedback]);
 				}
 			}
-			cb(null, output);
+			var returnJSON = {
+				'feedbacks': output,
+				'avg': 0
+			};
+			Feedback.generalavg(id, function(err, avg){
+				returnJSON.avg = avg;
+				cb(null, returnJSON);
+			})
 		 });
 	}
 
