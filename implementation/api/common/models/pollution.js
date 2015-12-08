@@ -1,5 +1,12 @@
+var moment = require('moment');
 module.exports = function(Pollution) {
 	Pollution.overallAvgForDateTime = function(dateTime, cb){
+
+		var tempDateTime = new Date(dateTime);
+						tempDateTime.setHours(tempDateTime.getHours() + Math.round(tempDateTime.getMinutes()/60));
+	    				tempDateTime.setMinutes(0);
+	    				tempDateTime.setSeconds(0);
+	    				dateTime = moment(tempDateTime).format("YYYY-MM-DD HH:mm:ss");
 
 		function findAvg(dateTime, pollutionItems){		
 
