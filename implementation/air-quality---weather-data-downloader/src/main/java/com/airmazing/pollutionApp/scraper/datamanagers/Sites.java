@@ -5,6 +5,7 @@ import com.airmazing.pollutionApp.scraper.objects.Entries;
 import com.airmazing.pollutionApp.scraper.objects.Entry;
 import com.airmazing.pollutionApp.scraper.utils.Files;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class Sites {
         );
     }
 
-    public static Entry parse(JSONObject o) {
+    public static Entry parse(JSONObject o) throws JSONException {
         Entry site = new Entry();
 
         site.setAttribute("site_id", o.getString("@SiteCode"));
@@ -50,11 +51,11 @@ public class Sites {
         return site;
     }
 
-    public static List<Entry> parse() {
+    public static List<Entry> parse() throws JSONException {
         return parse(new File(JSON_FILE));
     }
 
-    public static List<Entry> parse(File file) {
+    public static List<Entry> parse(File file) throws JSONException {
 
         JSONArray sitesJson = Files.getJsonObject(file).getJSONObject("Sites").getJSONArray("Site");
 
@@ -68,7 +69,7 @@ public class Sites {
         return sites;
     }
 
-    public static void outputToPostgres() {
+    public static void outputToPostgres() throws JSONException {
         Entries.outputEntriesToPostgres(parse(), "londonair1", "site");
     }
 

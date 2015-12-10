@@ -5,6 +5,7 @@ import com.airmazing.pollutionApp.scraper.objects.Entries;
 import com.airmazing.pollutionApp.scraper.objects.Entry;
 import com.airmazing.pollutionApp.scraper.utils.Files;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -60,7 +61,7 @@ public class Weather {
         }
     }
 
-    public static List<Entry> parse(String siteId, JSONObject o) throws ParseException {
+    public static List<Entry> parse(String siteId, JSONObject o) throws ParseException, JSONException {
 
         JSONArray weatherData = o.getJSONObject("data").getJSONArray("weather");
 
@@ -111,7 +112,7 @@ public class Weather {
         return weatherDatapoints;
     }
 
-    public static List<Entry> parse(File file) throws ParseException {
+    public static List<Entry> parse(File file) throws ParseException, JSONException {
         JSONObject o = Files.getJsonObject(file);
         String fileName = file.getName();
         String siteId = fileName.split("-")[0];
@@ -119,7 +120,7 @@ public class Weather {
         return parse(siteId, o);
     }
 
-    public static List<Entry> parse() throws ParseException {
+    public static List<Entry> parse() throws ParseException, JSONException {
 
         List<Entry> weatherDatapoints = new ArrayList<Entry>();
         List<String> filesToInsert = Files.getFileNames(Main.DOWNLOAD_FOLDER + "weather/json/" + 2015 + "/");
@@ -129,7 +130,7 @@ public class Weather {
         return weatherDatapoints;
     }
 
-    public static void outputToPostgres() throws ParseException {
+    public static void outputToPostgres() throws ParseException, JSONException {
         Entries.outputEntriesToPostgres(parse(), "londonair1", "weather");
     }
 }

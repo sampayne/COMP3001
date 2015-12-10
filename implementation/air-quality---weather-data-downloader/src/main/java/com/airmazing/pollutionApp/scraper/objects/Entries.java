@@ -1,19 +1,8 @@
 package com.airmazing.pollutionApp.scraper.objects;
 
 import com.airmazing.pollutionApp.scraper.PgConn;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang.StringEscapeUtils;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,103 +38,6 @@ public class Entries {
             }
         }
         return commonKeys;
-    }
-
-    public static List<Entry> inputAttributesFromCsv(String folderPath, String fileName, Character delimiter) {
-
-        FileReader fileReader = null;
-        CSVParser csvFileParser = null;
-        CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader().withRecordSeparator('\n').withDelimiter(delimiter);
-        try {
-            File csvFile = new File(folderPath, fileName);
-            List<Entry> entries= new ArrayList<Entry>();
-            fileReader = new FileReader(csvFile);
-            csvFileParser = new CSVParser(fileReader, csvFileFormat);
-            List<CSVRecord> csvRecords = csvFileParser.getRecords();
-            for (int i = 1; i < csvRecords.size(); i++) {
-
-                CSVRecord record = csvRecords.get(i);
-                Entry entry = new Entry();
-                for (Object key : record.toMap().keySet()) {
-                    if (record.toMap().get(key) != null && !record.toMap().get(key).equals("")) {
-                        entry.setAttribute(key.toString(), record.toMap().get(key).toString());
-                    }
-                }
-                entries.add(entry);
-            }
-            return entries;
-        } catch (Exception e) {
-            System.out.println("Error in CsvFileReader !!!");
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                fileReader.close();
-                csvFileParser.close();
-            } catch(IOException e) {
-                System.out.println("Error while closing fileReader/csvFileParser !!!");
-                e.printStackTrace();
-            }
-        }
-
-
-    }
-
-    public static void outputAttributesToCsv(List<Entry> entries, String folderPath, String title) {
-
-        String NEW_LINE_SEPARATOR = "\n";
-
-        List<String> attributeKeys = Entries.getCommonAttributeKeys(entries);
-
-        String [] FILE_HEADER = attributeKeys.toArray(new String[attributeKeys.size()]);
-
-        System.out.println(FILE_HEADER);
-
-        FileWriter fileWriter = null;
-        CSVPrinter csvFilePrinter = null;
-
-        CSVFormat csvFileFormat = CSVFormat.DEFAULT.withRecordSeparator(NEW_LINE_SEPARATOR);
-
-        try {
-
-            String fileName = title + ".csv";
-
-            Path localPath = Paths.get(folderPath);
-            if (!Files.exists(localPath)) {
-                Files.createDirectories(localPath);
-            }
-
-            File csv = new File(folderPath, fileName);
-
-            fileWriter = new FileWriter(csv);
-
-
-            csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
-            csvFilePrinter.printRecord((Object[])FILE_HEADER);
-
-            System.out.println("Creating CSV file...");
-
-            for (Entry photo : entries) {
-                csvFilePrinter.printRecord(photo.getValues(FILE_HEADER));
-            }
-
-            System.out.println("CSV file was created successfully!");
-
-        }
-        catch (Exception e) {
-            System.out.println("Error in CsvFileWriter!");
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                fileWriter.flush();
-                fileWriter.close();
-                csvFilePrinter.close();
-            } catch (IOException e) {
-                System.out.println("Error while flushing/closing fileWriter/csvPrinter!");
-                e.printStackTrace();
-            }
-        }
     }
 
     public static List<String> getDifferentAttributeValues(String key, List<Entry> entries) {

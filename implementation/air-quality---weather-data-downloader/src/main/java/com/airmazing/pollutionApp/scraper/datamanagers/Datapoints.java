@@ -5,6 +5,7 @@ import com.airmazing.pollutionApp.scraper.objects.Entries;
 import com.airmazing.pollutionApp.scraper.objects.Entry;
 import com.airmazing.pollutionApp.scraper.utils.Files;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -62,7 +63,7 @@ public class Datapoints {
         }
     }
 
-    public static List<Entry> parse(JSONObject o) throws ParseException {
+    public static List<Entry> parse(JSONObject o) throws ParseException, JSONException {
 
         o = o.getJSONObject("RawAQData");
 
@@ -105,7 +106,7 @@ public class Datapoints {
 
     }
 
-    public static void insertToDb (Date startDate, Date endDate, String speciesId) throws ParseException {
+    public static void insertToDb (Date startDate, Date endDate, String speciesId) throws ParseException, JSONException {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = format.format(startDate) + "_" + format.format(endDate);

@@ -5,6 +5,7 @@ import com.airmazing.pollutionApp.scraper.datamanagers.Sites;
 import com.airmazing.pollutionApp.scraper.datamanagers.Weather;
 import com.airmazing.pollutionApp.scraper.objects.Entries;
 import com.airmazing.pollutionApp.scraper.objects.Entry;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -32,31 +33,6 @@ public class Main {
     public static final String SITES_AIR_QUALITY_XML_URL = API_URL + "/Data/SiteSpecies/SiteCode={siteCode}/SpeciesCode=NO2/StartDate=01-11-2015/EndDate=02-11-2015";
 
     public static boolean LOG_DOWNLOADS = true;
-
-
-    public static void downloadDatapoints (String speciesId) throws IOException {
-        List<String> siteIds = Entries.getDifferentAttributeValues("site_id", Sites.parse());
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date startDate = format.parse("2015-11-03");
-            Date endDate = format.parse("2015-12-02");
-
-            Datapoints.download(siteIds, speciesId, startDate, endDate);
-
-/*            startDate = format.parse("2014-01-01");
-            endDate = format.parse("2015-01-01");
-
-            Datapoints.download(siteIds, speciesId, startDate, endDate);
-
-            startDate = format.parse("2013-01-01");
-            endDate = format.parse("2014-01-01");
-
-            Datapoints.download(siteIds, speciesId, startDate, endDate);*/
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void downloadWeather () throws IOException {
 
@@ -97,7 +73,7 @@ public class Main {
         }
     }
 
-    public static void getYesterdayAirQuality(String speciesId) throws IOException, ParseException {
+    public static void getYesterdayAirQuality(String speciesId) throws IOException, ParseException, JSONException {
         List<String> siteIds = Entries.getDifferentAttributeValues("site_id", Sites.parse());
 
         Date today = new Date();
@@ -111,20 +87,15 @@ public class Main {
         Datapoints.insertToDb(yesterday, today, speciesId);
     }
 
-
-
-
     public static void main(String[] args) throws ParseException {
 
-        //Sites.downloadXml();
+        // Downlaod and store data about air quality recording sites
+        //Sites.download();
         //Sites.outputToPostgres();
 
+        // Downlaod and store data about all the pollutants
         //Species.download();
         //Species.outputToPostgres();
-
-        //JSONObject datapointsJson = getJsonObject(new File(DOWNLOAD_FOLDER + "air quality/json/2014/NO2/BL0-NO2-2014.txt"));
-
-        //System.out.println(getJsonRefineries(new File(DOWNLOAD_FOLDER + "sites/sites.txt")));
 
         try {
             getYesterdayAirQuality("PM10");
@@ -132,18 +103,19 @@ public class Main {
             getYesterdayAirQuality("NO2");
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         //Datapoints.insertToDb();
 
-      /*  try {
+        /*try {
             downloadWeather();
         } catch (IOException e) {
-
             e.printStackTrace();
         }
-*/
-        //Weather.parse();
-        //Weather.outputToPostgres();
+
+        Weather.parse();
+        Weather.outputToPostgres();*/
     }
 
 }

@@ -2,6 +2,7 @@ package com.airmazing.pollutionApp.scraper.utils;
 
 import com.airmazing.pollutionApp.scraper.Main;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -55,6 +56,8 @@ public class Files {
                 break;
             }
         } catch (IOException e) {
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return object;
     }
@@ -73,6 +76,8 @@ public class Files {
 
             }
         } catch (IOException e) {
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return objects;
     }
@@ -81,7 +86,11 @@ public class Files {
 
         List<Object> keyValues = new ArrayList<Object>();
         for (int i = 0; i < list.length; i++) {
-            keyValues.add(list[i].get(key));
+            try {
+                keyValues.add(list[i].get(key));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         return keyValues;
