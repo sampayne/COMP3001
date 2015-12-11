@@ -1,14 +1,12 @@
 <resources>
     <string name="app_name">Airmazing</string>
-    <string name="title_activity_login">LoginActivity</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_dashboard">DashboardActivity</string>
-    <string name="title_activity_feedback_list">FeedbackListActivity</string>
-    <string name="title_activity_historical_chart">HistoricalChart</string>
-    <string name="title_activity_route_record">RouteRecord</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="title_activity_feedback_list">Feedback</string>
+    <string name="title_activity_historical_chart">Historical Data</string>
+    <string name="title_activity_route_record">Record a Route</string>
+    <string name="title_activity_settings">Settings</string>
 
     <string name="latitude_label">Latitude</string>
     <string name="longitude_label">Longitude</string>

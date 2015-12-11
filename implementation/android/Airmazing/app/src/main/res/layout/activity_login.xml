@@ -4,12 +4,17 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
-    tools:context="airmazing.airmazing.ui.LoginActivity">
+    tools:context="airmazing.airmazing.ui.LoginActivity"
+    android:background="@color/defaultBlue"
+    android:theme="@style/AppTheme"
+    >
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30sp"
-        android:layout_marginLeft="30sp"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:id="@+id/emailField"
         android:hint="Email..."
         android:inputType="textEmailAddress" />
@@ -17,18 +22,29 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30sp"
-        android:layout_marginLeft="30sp"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:inputType="textPassword"
         android:id="@+id/passwordField"
         android:hint="Password..."
-        android:layout_below="@+id/emailField"
-        android:layout_gravity="center" />
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:text="Login"
         android:id="@+id/loginButton"
     />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Signup"
+        android:id="@+id/loginSignUpButton"
+        />
 </LinearLayout>

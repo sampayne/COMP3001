@@ -1,8 +1,18 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="airmazing.airmazing.ui.DashboardActivity">
+    tools:context="airmazing.airmazing.ui.DashboardActivity"
+    android:id="@+id/swipeToRefresh"
+    >
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+
 <LinearLayout
 
     android:layout_width="match_parent"
@@ -10,11 +20,13 @@
     android:orientation="vertical">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="Record Route"
         android:id="@+id/record_route_button"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        />
 
     <include layout="@layout/dashboard_feedback_input" android:id="@+id/feedbackInput" />
 
@@ -22,8 +34,21 @@
 
     <include layout="@layout/dashboard_today" android:id="@+id/tomorrowView" />
 
+    <include layout="@layout/dashboard_overall_avg" android:id="@+id/overallView" />
+
     <include layout="@layout/dashboard_feedback_avg" android:id="@+id/feedbackAvg" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:id="@+id/dashboardSettingsButtons"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+            />
 
 </LinearLayout>
 
 </ScrollView>
+
+</android.support.v4.widget.SwipeRefreshLayout>

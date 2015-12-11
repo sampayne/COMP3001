@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<airmazing.airmazing.views.FeedbackAvgSubview xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="0dp"
+    android:layout_weight=".12"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:padding="1sp"
+    >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/feedbackSubViewIcon"
+        android:src="@drawable/indifferent"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/feedbackSubViewLabel"
+        android:text="\?"
+        android:textColor="#ffffff"
+        android:fontFamily="sans-serif-light"
+
+        />
+
+</airmazing.airmazing.views.FeedbackAvgSubview>

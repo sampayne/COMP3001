@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/defaultBlue"
+    android:gravity="center"
+    tools:context="airmazing.airmazing.ui.SignupActivity"
+
+    >
+
+    <EditText
+        android:layout_marginRight="30sp"
+        android:layout_marginLeft="30sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/signupEmail"
+        android:hint="Email Address..."
+
+        />
+
+    <EditText
+        android:layout_marginRight="30sp"
+        android:layout_marginLeft="30sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/editText2"
+        android:hint="Password..."
+        />
+    <EditText
+        android:layout_marginRight="30sp"
+        android:layout_marginLeft="30sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/signUpCommuteTime"
+        android:layout_gravity="center_horizontal"
+        android:hint="When do you begin your commute?"
+        />
+    <EditText        android:layout_marginRight="30sp"
+        android:layout_marginLeft="30sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/signUpWorkTime"
+        android:layout_gravity="center_horizontal"
+        android:hint="How long do you spend at work? (hrs)"
+        />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:text="Signup"
+        android:id="@+id/signupSignupButton"
+        />
+
+</LinearLayout>

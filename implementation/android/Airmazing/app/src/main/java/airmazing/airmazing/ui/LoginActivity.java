@@ -1,78 +1,87 @@
 package airmazing.airmazing.ui;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View.OnClickListener;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.strongloop.android.loopback.AccessToken;
-import com.strongloop.android.loopback.RestAdapter;
-import com.strongloop.android.loopback.User;
+import org.json.JSONObject;
 
-
-import android.content.Intent;
 import airmazing.airmazing.R;
-import airmazing.airmazing.networking.UserRepository;
+import airmazing.airmazing.models.UserSettings;
+import airmazing.airmazing.networking.APIClient;
+import airmazing.airmazing.networking.Callback;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener{
 
-    private RestAdapter adapter;
-    private UserRepository userRepo;
+    private EditText emailField;
+    private EditText passwordField;
+
+    private Button loginButton;
+    private Button signUpButton;
+
+    private APIClient api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        this.adapter = new RestAdapter(getApplicationContext(), "http://comp3001.sam-payne.co.uk:3000/api");
-        this.userRepo = adapter.createRepository(UserRepository.class);
 
-        Log.d("Message:", this.userRepo.getNameForRestUrl());
+        UserSettings.context = getApplicationContext();
 
-        Button loginButton = (Button) findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(this);
+        this.emailField = (EditText) findViewById(R.id.emailField);
+        this.passwordField = (EditText) findViewById(R.id.passwordField);
+
+        this.loginButton = (Button) findViewById(R.id.loginButton);
+        this.loginButton.setOnClickListener(this);
+
+        this.signUpButton = (Button) findViewById(R.id.loginSignUpButton);
+        this.signUpButton.setOnClickListener(this);
+
+        this.api = new APIClient(this);
+
+    }
+
+    private void signUpClick(){
+
+        Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+        startActivity(intent);
+
     }
 
     public void onClick(View v){
         switch (v.getId()){
             case R.id.loginButton:{
-
                 loginButtonClick();
+                break;
+            }
+            case R.id.loginSignUpButton:{
+                signUpClick();
+
             }
         }
     }
 
     public void loginButtonClick(){
 
-        final EditText emailField = (EditText) findViewById(R.id.emailField);
-        final EditText passwordField = (EditText) findViewById(R.id.passwordField);
-
         if (emailField.getText().length() > 0 && passwordField.getText().length() > 0){
 
-            userRepo.loginUser(emailField.getText().toString(), passwordField.getText().toString(), new UserRepository.LoginCallBack() {
-
-                @Override
-                public void onSuccess(AccessToken token, User currentUser) {
+            this.api.login(emailField.getText().toString(), passwordField.getText().toString(), new Callback<JSONObject>() {
+                public void response(JSONObject response) {
 
                     Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                     startActivity(intent);
                     finish();
-                    System.out.println(token.getUserId() + ":" + currentUser.getId());
                 }
-
-                @Override
-                public void onError(Throwable t) {
-                    Log.e("Chatome", "Login E", t);
-                }
-
             });
-
-
 
         }else{
 
@@ -81,4 +90,20 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
             alert.show();
         }
     }
+
+    @Override
+    public void onResume(){
+
+        super.onResume();
+
+        if (UserSettings.isLoggedIn()) {
+            Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+    }
+
 }
+
+

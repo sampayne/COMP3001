@@ -1,14 +1,57 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="actionBarStyle">@style/ActionBarStyle</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="android:navigationBarColor">@color/buttonBlue</item>
+        <item name="android:statusBarColor">@color/buttonBlue</item>
+        <item name="colorPrimary">@color/buttonBlue</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="ActionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="android:background">@color/buttonBlue</item>
+        <item name="background">@color/buttonBlue</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="titleTextStyle">@style/TitleTextStyle</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+
+    </style>
+    <style name="EditTextStyle" parent="android:Widget.Holo.EditText">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">#ffffff</item>
+        <item name="android:padding">10sp</item>
+    </style>
+
+    <style name="TextViewStyle" parent="android:Widget.Holo.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="ButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:background">@color/buttonBlue</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:paddingBottom">10sp</item>
+        <item name="android:paddingTop">10sp</item>
+        <item name="android:paddingLeft">40sp</item>
+        <item name="android:paddingRight">40sp</item>
+    </style>
 </resources>
