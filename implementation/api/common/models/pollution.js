@@ -7,7 +7,8 @@ module.exports = function(Pollution) {
 		    var Conc = parseFloat(Concentration);
 		    var a;
 		    a = ((Conc - Conclow) / (Conchigh - Conclow)) * (AQIhigh - AQIlow) + AQIlow;
-		    linear = Math.round(a);
+		    linear = a;
+		    //linear = Math.round(a);
 		    return linear;
 		}
 
@@ -17,19 +18,13 @@ module.exports = function(Pollution) {
 		    var AQI;
 		    c = (Math.floor(10 * Conc)) / 10;
 		    if (c >= 0 && c < 12.1) {
-		        AQI = Linear(50, 0, 12, 0, c);
+		        AQI = Linear(3.9, 1, 12, 0, c);
 		    } else if (c >= 12.1 && c < 35.5) {
-		        AQI = Linear(100, 51, 35.4, 12.1, c);
-		    } else if (c >= 35.5 && c < 55.5) {
-		        AQI = Linear(150, 101, 55.4, 35.5, c);
-		    } else if (c >= 55.5 && c < 150.5) {
-		        AQI = Linear(200, 151, 150.4, 55.5, c);
-		    } else if (c >= 150.5 && c < 250.5) {
-		        AQI = Linear(300, 201, 250.4, 150.5, c);
-		    } else if (c >= 250.5 && c < 350.5) {
-		        AQI = Linear(400, 301, 350.4, 250.5, c);
-		    } else if (c >= 350.5 && c < 500.5) {
-		        AQI = Linear(500, 401, 500.4, 350.5, c);
+		        AQI = Linear(6.9, 4, 35.4, 12.1, c);
+		    } else if (c >= 35.5 && c < 150.5) {
+		        AQI = Linear(9.9, 7, 150.4, 35.5, c);
+		    } else if (c >= 150.5 && c < 500.5) {
+		        AQI = Linear(10, 10, 500.4, 150.5, c);
 		    } else {
 		        AQI = "Out of Range";
 		    }
@@ -42,19 +37,13 @@ module.exports = function(Pollution) {
 		    var AQI;
 		    c = Math.floor(Conc);
 		    if (c >= 0 && c < 55) {
-		        AQI = Linear(50, 0, 54, 0, c);
+		        AQI = Linear(3.9, 1, 54, 0, c);
 		    } else if (c >= 55 && c < 155) {
-		        AQI = Linear(100, 51, 154, 55, c);
-		    } else if (c >= 155 && c < 255) {
-		        AQI = Linear(150, 101, 254, 155, c);
-		    } else if (c >= 255 && c < 355) {
-		        AQI = Linear(200, 151, 354, 255, c);
-		    } else if (c >= 355 && c < 425) {
-		        AQI = Linear(300, 201, 424, 355, c);
-		    } else if (c >= 425 && c < 505) {
-		        AQI = Linear(400, 301, 504, 425, c);
-		    } else if (c >= 505 && c < 605) {
-		        AQI = Linear(500, 401, 604, 505, c);
+		        AQI = Linear(6.9, 4, 154, 55, c);
+		    } else if (c >= 155 && c < 355) {
+		        AQI = Linear(9.9, 7, 354, 155, c);
+		    } else if (c >= 355 && c < 605) {
+		        AQI = Linear(10, 10, 604, 355, c);
 		    } else {
 		        AQI = "Out of Range";
 		    }
@@ -70,19 +59,13 @@ module.exports = function(Pollution) {
 		    var AQI;
 		    c = (Math.floor(Conc)) / 1000;
 		    if (c >= 0 && c < .054) {
-		        AQI = Linear(50, 0, .053, 0, c);
+		        AQI = Linear(3.9, 1, .053, 0, c);
 		    } else if (c >= .054 && c < .101) {
-		        AQI = Linear(100, 51, .100, .054, c);
-		    } else if (c >= .101 && c < .361) {
-		        AQI = Linear(150, 101, .360, .101, c);
-		    } else if (c >= .361 && c < .650) {
-		        AQI = Linear(200, 151, .649, .361, c);
-		    } else if (c >= .650 && c < 1.250) {
-		        AQI = Linear(300, 201, 1.249, .650, c);
-		    } else if (c >= 1.250 && c < 1.650) {
-		        AQI = Linear(400, 301, 1.649, 1.250, c);
-		    } else if (c >= 1.650 && c <= 2.049) {
-		        AQI = Linear(500, 401, 2.049, 1.650, c);
+		        AQI = Linear(6.9, 4, .100, .054, c);
+		    } else if (c >= .101 && c < .650) {
+		        AQI = Linear(9.9, 7, .649, .101, c);
+		    } else if (c >= .650 && c < 2.049) {
+		        AQI = Linear(10, 10, 2.049, .650, c);
 		    } else {
 		        AQI = "Out of Range";
 		    }
@@ -132,7 +115,7 @@ module.exports = function(Pollution) {
 
 			}
 
-			var avgPM10 = 0, avgPM25 = 0, avgNO2 = 0;
+			var avgPM10 = 0.0, avgPM25 = 0.0, avgNO2 = 0.0;
 
 			for(val in sensorVals.PM10){
 				//console.log(avgPM10);
@@ -152,7 +135,7 @@ module.exports = function(Pollution) {
 			}
 			avgNO2 /= sensorVals.NO2.length;
 			avgNO2 = normaliseIndex("NO2",avgNO2);
-			
+
 			var overallAvg = (avgPM10 + avgPM25 + avgNO2) / 3;
 
 			if(overallAvg){
