@@ -460,14 +460,31 @@ module.exports = function(Routes) {
 		    var c;
 		    var AQI;
 		    c = (Math.floor(10 * Conc)) / 10;
-		    if (c >= 0 && c < 12.1) {
-		        AQI = Linear(3.9, 1, 12, 0, c);
-		    } else if (c >= 12.1 && c < 35.5) {
-		        AQI = Linear(6.9, 4, 35.4, 12.1, c);
-		    } else if (c >= 35.5 && c < 150.5) {
-		        AQI = Linear(9.9, 7, 150.4, 35.5, c);
-		    } else if (c >= 150.5 && c < 500.5) {
-		        AQI = Linear(10, 10, 500.4, 150.5, c);
+
+		    if (c >= 0 && c < 36) {
+		        AQI = Linear(3.9, 1, 36, 0, c);
+
+		    } else if (c >= 36 && c < 42) {
+		        AQI = Linear(4.9, 4, 42, 36.1, c);
+
+		    } else if (c >= 42 && c < 48) {
+		        AQI = Linear(5.9, 5, 48, 42.1, c);
+
+		    } else if (c >= 48 && c < 54) {
+		        AQI = Linear(6.9, 6, 54, 48.1, c);
+
+		    } else if (c >= 54 && c < 59) {
+		        AQI = Linear(7.9, 7, 59, 54.1, c);
+
+		    } else if (c >= 59 && c < 65) {
+		        AQI = Linear(8.9, 8, 65, 59.1, c);
+
+		    } else if (c >= 65 && c < 71) {
+		        AQI = Linear(9.9, 9, 71, 65.1, c);
+
+		    } else if (c >= 71) {
+		        AQI = 10;
+
 		    } else {
 		        AQI = "Out of Range";
 		    }
@@ -479,14 +496,15 @@ module.exports = function(Routes) {
 		    var c;
 		    var AQI;
 		    c = Math.floor(Conc);
-		    if (c >= 0 && c < 55) {
-		        AQI = Linear(3.9, 1, 54, 0, c);
-		    } else if (c >= 55 && c < 155) {
-		        AQI = Linear(6.9, 4, 154, 55, c);
-		    } else if (c >= 155 && c < 355) {
-		        AQI = Linear(9.9, 7, 354, 155, c);
-		    } else if (c >= 355 && c < 605) {
-		        AQI = Linear(10, 10, 604, 355, c);
+		    if (c >= 0 && c < 51) {
+		        AQI = Linear(3.9, 1, 50, 0, c);
+
+		    } else if (c >= 51 && c < 101) {
+		        AQI = Linear(9.9, 4, 100, 51.1, c);
+
+		    } else if (c >= 101) {
+		        AQI = 10;
+
 		    } else {
 		        AQI = "Out of Range";
 		    }
@@ -501,14 +519,12 @@ module.exports = function(Routes) {
 		    var c;
 		    var AQI;
 		    c = (Math.floor(Conc)) / 1000;
-		    if (c >= 0 && c < .054) {
-		        AQI = Linear(3.9, 1, .053, 0, c);
-		    } else if (c >= .054 && c < .101) {
-		        AQI = Linear(6.9, 4, .100, .054, c);
-		    } else if (c >= .101 && c < .650) {
-		        AQI = Linear(9.9, 7, .649, .101, c);
-		    } else if (c >= .650 && c < 2.049) {
-		        AQI = Linear(10, 10, 2.049, .650, c);
+		    if (c >= 0 && c < 601) {
+		        AQI = Linear(9.9, 1, 601, 0, c);
+
+		    } else if (c >= 601) {
+		        AQI = 10;
+
 		    } else {
 		        AQI = "Out of Range";
 		    }
