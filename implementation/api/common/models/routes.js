@@ -134,9 +134,15 @@ module.exports = function(Routes) {
 
 
 							Routes.calcindex(stayRoute, function(err, indexResult){
+								console.log("stayRoute below");
+								console.log(stayRoute);
 								//console.log("indexresult: "+indexResult)
-								index += indexResult.pollutionIndex*59;
+								console.log("returnindexresult: "+index+ "numLocs: "+lengthForAvgIndex);
+
+								index += indexResult.averagePollutionIndex*59;
 								lengthForAvgIndex += 59;
+								console.log("returnindexresult: "+index+ "numLocs: "+lengthForAvgIndex);
+
 
 								numOfMins -= 59;
 								callback(null,numOfMins);
@@ -156,9 +162,11 @@ module.exports = function(Routes) {
 
 
 							Routes.calcindex(stayRoute, function(err, indexResult){
-								console.log("indexresult: "+indexResult.pollutionIndex)
+								console.log("returnindexresult: "+index+ "numLocs: "+lengthForAvgIndex);
 								index += indexResult.pollutionIndex;
 								lengthForAvgIndex += indexResult.numOfLocations;
+																console.log("returnindexresult: "+index+ "numLocs: "+lengthForAvgIndex);
+
 
 								numOfMins--;
 								callback(null,numOfMins);
@@ -193,8 +201,8 @@ module.exports = function(Routes) {
 
 				    		routeObjReversed = routeObjReversed.reverse();
 
-				    		console.log(routeObjCopy);
-				    		console.log(routeObjReversed);
+				    		//console.log(routeObjCopy);
+				    		//console.log(routeObjReversed);
 
 
 							for(coord in routeObjCopy){
@@ -202,15 +210,17 @@ module.exports = function(Routes) {
 							   routeObjCopy[coord].lat = routeObjReversed[coord].lat;
 							   routeObjCopy[coord].time = (moment(new Date(routeObjCopy[coord].time)).add(diffMins+numOfMinsCopy, 'minutes')).format("YYYY-MM-DD HH:mm:ss");
 							}
-							console.log("return route object PRINT:" +routeObjCopy);
-							console.log(routeObjCopy);
-														console.log("return route object PRINT:" +routeObjCopy);
+							//console.log("return route object PRINT:" +routeObjCopy);
+							//console.log(routeObjCopy);
+							//							console.log("return route object PRINT:" +routeObjCopy);
 
 
 				    		Routes.calcindex(routeObjCopy, function(err, indexResult){
-								console.log("returnindexresult: "+indexResult.pollutionIndex)
+								//console.log("returnindexresult: "+index+ "numLocs: "+lengthForAvgIndex);
 								index += indexResult.pollutionIndex;
 								lengthForAvgIndex += indexResult.numOfLocations;
+																//console.log("returnindexresult: "+index+ "numLocs: "+lengthForAvgIndex);
+
 
 								var returnPollutionIndex = {
 									"pollutionIndex" : index,
@@ -685,11 +695,13 @@ module.exports = function(Routes) {
 					console.log(route);
 					var pollutionIndex = 0;
 					for(step in route){
+						console.log(route[step].pollutionVal)
 						pollutionIndex += route[step].pollutionVal;
 					}
 					console.log(pollutionIndex);
-					pollutionIndex += (pollutionIndex/(route.length-numberOfMissingPollutions)) * numberOfMissingPollutions; //to account for missing pollutions
+					//pollutionIndex += (pollutionIndex/(route.length-numberOfMissingPollutions)) * numberOfMissingPollutions; //to account for missing pollutions (doesnt matter anymore as we are doing an average)
 					var avgPollutionIndex = pollutionIndex / route.length;
+					console.log("averagepolllutionindexreturned" +avgPollutionIndex);
 					var returnPollutionIndex = {
 						"pollutionIndex" : pollutionIndex,
 						"averagePollutionIndex" : avgPollutionIndex,
